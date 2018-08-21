@@ -8,6 +8,8 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
+    "@aws-amplify/auth": "^1.0.5",
+    "ramda": "^0.25.0",
     "vue": "^2.5.17"
   },
   "devDependencies": {
