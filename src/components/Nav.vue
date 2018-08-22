@@ -1,7 +1,7 @@
 <template>
     <div id="nav-container" >
 
-    <button id="menu" class="material-icons" @click="showItems">menu</button>
+    <button id="menu" class="material-icons" @click="showItems">{{ symbol }} </button>
     <transition-group name="show-menu">
     <div id="items-container" v-show="isMenu" key="items">
         <button id="home" class="material-icons menu-item" @click="goHome">home</button>
@@ -34,7 +34,13 @@ export default {
         return {
             isMenu:false
         }
+    },
+    computed:{
+        symbol(){
+            return !this.isMenu ? "menu" : "close"
+        }
     }
+
 }
 </script>
 
