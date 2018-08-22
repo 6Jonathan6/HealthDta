@@ -66,7 +66,8 @@ div.triangle-p{
     clip-path: polygon(100% 50%, 1% 1%, 1% 100%);
         color:#b47b44;
     z-index: -1;
-    background: #9b5b1d;;
+    background: #9b5b1d;
+    opacity: 0.8;
 }
 
 div.interactive-right{

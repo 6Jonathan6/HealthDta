@@ -5,6 +5,12 @@
             <fieldset >
                 <legend>Sign In</legend>
                 <ul>
+                    <li class="read-only-container">
+                        <i class="material-icons" v-show="error">
+                            error
+                        </i>
+                        {{ signInMessage }}
+                    </li>
                     <li>
                         <input id="signin-email-input" type="email" v-model="username" required>
                         <label for="signin-email-input">Email</label>
@@ -37,13 +43,30 @@ export default {
         navButtons:Nav,
     },
     methods:{
+        signIn(){
 
+        },
+        show(){
+            this.showPassword = !this.showPassword
+        }
     },
     data(){
         return {
             username:null,
             password:null,
-            isDisabled:false
+            isDisabled:false,
+            showPassword:false,
+            signInMessage: "",
+            error:false,
+        }
+    },
+    computed:{
+        classObject(){
+            return this.isDisabled ? { disabled : true } : { disabled : false } 
+        },
+
+        icon(){
+            return this.showPassword ? "visibility_off" : "visibility"
         }
     }
 }
@@ -51,5 +74,7 @@ export default {
 
 <style>
     @import url('./styles/form.css');
+    @import url('./styles/disabled.css');
+    @import url('./styles/formsChrome.css');
 </style>
 

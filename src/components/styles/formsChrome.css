@@ -1,0 +1,12 @@
+  /* Remove auto fill background of chrome */
+@-webkit-keyframes autofill {
+    to {
+        color:blanchedalmond;
+        background: #0f1e32;
+    }
+}
+
+input:-webkit-autofill {
+    -webkit-animation-name: autofill;
+    -webkit-animation-fill-mode: both;
+}

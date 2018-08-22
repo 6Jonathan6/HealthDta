@@ -168,7 +168,8 @@ export default {
 </script>
 
 <style>
-   @import url('./styles/form.css');
-   @import url('./styles/disabled.css');
+    @import url('./styles/form.css');
+    @import url('./styles/disabled.css');
+    @import url('./styles/formsChrome.css')
 
 </style>
