@@ -45,10 +45,13 @@ const confirmResponseH = R.curry(function(vm,prop,emitShow,showComponent,respons
 
 const senCodeAgain = function(username,vm,isDisabled){
     disabledButton(vm,isDisabled)
-    setTimeout( () => enabledButton(vm,isDisabled), 10000);
+    setTimeout( () => enabledButton(vm,isDisabled), 5000);
     return callAuthResendSignUp(username)
 }
 
+const writeSuccesMessage = R.curry(function(vm,prop,obj){
+    vm[prop] =  "Code was sent to " + obj.CodeDeliveryDetails.Destination
+})
 
 export {
     signUp,
@@ -57,4 +60,5 @@ export {
     confirmCode,
     confirmResponseH,
     senCodeAgain,
+    writeSuccesMessage
 }

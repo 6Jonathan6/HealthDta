@@ -10,7 +10,7 @@
                         <i class="material-icons" v-show="error">
                             error
                         </i>
-                        {{ confirmCodeMessage }}
+                        <p class="message"> {{ confirmCodeMessage }} </p>
                     </li>
                     <li class="code-input-container">
                         <input id="code" type="number"  v-model="code" max="999999" pattern="\d{6}" title="Confirmation code is formed of  6 numbers" required>
@@ -33,7 +33,7 @@
                     <i class="material-icons" v-show="error">
                         error
                     </i>
-                    {{ signUpMessage }}
+                    <p class="message">{{ signUpMessage }}</p>
                 </li>
                 <li>
                     <input  id="nickname" type="text" v-model="nickname"  required>
@@ -71,7 +71,8 @@ import{
     signUp, 
     responseHandler,
     confirmCode,
-    confirmResponseH
+    confirmResponseH,
+    writeSuccesMessage
 }from './services/SingUp.js'
 
 import Nav from './Nav.vue'
@@ -132,13 +133,12 @@ export default {
         resendCode(){
             const vm = this
             const username = vm.sub
-            const button = "resend-button"
-            const initialMessage = vm.errorMessage
-            const writeErrorCode =writeError(vm,"errorMessage",initialMessage,button)
-            const writeSuccesMessage = R.curry((vm,prop,response) => { vm[prop] = `Code was sent to  ${response.CodeDeliveryDetails.Destination}`})
-            const writeSuccesMessageC = writeSuccesMessage(vm,"errorMessage")
+            const isDisabled = "isDisabled"
+            const initialMessage = vm.confirmCodeMessage
+            const writeErrorCode =writeError(vm,"confirmCodeMessage",initialMessage,isDisabled)
+            const writeSuccesMessageC = writeSuccesMessage(vm,"confirmCodeMessage")
             const resenCode = R.compose(catchP(writeErrorCode),then(writeSuccesMessageC),senCodeAgain)
-            resenCode(username,button)
+            resenCode(username,vm,isDisabled)
         },
 
 
@@ -168,7 +168,7 @@ export default {
 </script>
 
 <style>
-    @import url('./styles/form.css');
+   @import url('./styles/form.css');
     @import url('./styles/disabled.css');
     @import url('./styles/formsChrome.css')
 

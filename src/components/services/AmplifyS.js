@@ -21,10 +21,14 @@ function callAuthSignIn(username,password){
     return Auth.signIn(username,password)
 }
 
+function callAuthForgotPassword(username){
+    return Auth.forgotPassword(username);
+}
 export {
     callAuthsignUp,
     callAuthConfirmSignUp,
     callAuthResendSignUp,
     callAuthSignIn,
+    callAuthForgotPassword
 
 }

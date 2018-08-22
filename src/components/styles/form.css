@@ -14,7 +14,7 @@
     }
 
 
-    #signup-form, #code-confirmation, #signin-form{
+    #signup-form, #code-confirmation, #signin-form, #recoverPasswordForm{
         grid-area: 2 / 2 / 3 / 4;
         z-index: 1;
         background-color: #0f1e32;
@@ -50,7 +50,10 @@
     form > fieldset ul li:nth-last-child(2){
         margin-top: 3.55rem;
     }
-
+    li span{
+        font-family: monospace;
+        font-size: 1.2rem;
+    }
 
     label{
         width: 100%;
@@ -196,7 +199,7 @@
         border: none;
         color: blanchedalmond;
         font-family: monospace;
-        font-size:1rem;
+        font-size:1.3rem;
 
     }
 
@@ -231,10 +234,22 @@ font-size: 1rem;
 border: 2px outset yellow;
 }
 
-#resend-button:hover{
+#forgotButton{
+    margin-left: 1rem;
+    width: 100px;
+    background: #0f1e32;
+    color: blanchedalmond;
+    font-family: monospace;
+    border-radius: 15px;
+    font-size: 1rem;
+    border: 3px outset orangered;
+    outline: none;
+}
+
+#resend-button:hover, #forgotButton:hover {
     transform: scale(1.1);
 }
-#resend-button:active{
+#resend-button:active, #forgotButton:active{
     border-style: inset;
     transform: scale(0.9)
 }

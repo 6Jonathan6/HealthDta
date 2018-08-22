@@ -40,7 +40,7 @@ const enabledButton = R.curry(function (vm,prop) {
    vm[prop] = false
 })
 
-
+//isDisabled prop of the vue compenents which handles wether the button is disabled or not
 const writeError = R.curry(function (vm, prop, initialMessage, isDisabled, obj) {
     vm[prop] = obj.message
     vm["error"] = true
