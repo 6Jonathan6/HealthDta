@@ -6,17 +6,39 @@
                 <legend>Recover Password</legend>
                 <ul>
                     <li>
+                        <i class="material-icons" v-show="error">warning</i>
+                       <p class="message">{{ errorRecoverCode}}</p>
+                    </li>
+                    <li v-if="codeWasSent">
+                        <input type="number" v-model="code" id="code" required>
+                        <label for="code">Code</label>
+                    </li>
+                    <li v-if="!codeWasSent">
                         <p class="message">
+                            <i class="material-icons"> info </i>
                             A code will be send to your email in order to recover 
                             your password
                         </p>
                     </li>
-                    <li>
+                    <li v-if="codeWasSent">
+                        <input id="password" :type="showPassword ? 'text' : 'password' " 
+                        v-model="password" 
+                        pattern="(?=.*\d)(?=.*[A-Z])(?=.*[a-z])(?=.*\W).{8,}" 
+                        title="Must contain  at least 1 number, 1 uppercase and 1 lowercase letter  and 1 special character" 
+                        required >
+                        <label for="password"> New Password</label>
+                        <p class="invalid-password-message">At least 1 lowercase and  1 uppercase letter, 1 number and 1 special character</p>
+                        <button id="eye" @click.prevent="show" class="material-icons">{{ icon }} </button>
+                    </li>
+                    <li v-if="!codeWasSent">
                         <input type="email" v-model="username" id="username" required>
                         <label for="username">Username</label>
                     </li>
-                    <li>
-                        <input type="submit"  value="Send code">
+                    <li v-if="!codeWasSent">
+                        <input  :class="classObject" type="submit"  value="Send code" :disabled="isDisabled">
+                    </li>
+                    <li v-if="codeWasSent">
+                        <input  :class="classObject" type="submit"  value="Send" :disabled="isDisabled">
                     </li>
                 </ul>
             </fieldset>
@@ -27,7 +49,7 @@
                 <ul>
                     <li class="read-only-container">
                         <i class="material-icons" v-show="error">
-                            error
+                            warning
                         </i>
                         <span>{{ signInMessage }}</span>
                     </li>
@@ -57,7 +79,15 @@
 <script>
 import * as R from 'ramda'
 import Nav from './Nav.vue'
-import { signIn, succesfulHandler } from './services/SignIn.js'
+
+import { 
+    signIn, 
+    succesfulHandler, 
+    sendRecoverCode, 
+    succesfulCodeHandler 
+
+} from './services/SignIn.js'
+        
 import { catchP, then, writeError } from './services/Helpers.js'
 import { emitShow } from './services/ShowComponent';
 
@@ -92,7 +122,19 @@ export default {
         },
         forgotPassword(){
             this.isForgotten = true;
-        }
+        },
+        recoverPassword(){
+            const vm = this
+            const prop = "codeWasSent"
+            const isDisabled = "isDisabled"
+            const username = vm.username
+            const writeErrorC = writeError(vm,"errorRecoverCode","",isDisabled)
+            const succesfulHandler = succesfulCodeHandler(vm,prop)
+            const sendCode = R.compose(catchP(writeErrorC),then(succesfulHandler),sendRecoverCode)
+            sendCode(vm,isDisabled,username)
+        },
+
+
     },
     data(){
         return {
@@ -103,6 +145,9 @@ export default {
             signInMessage: "",
             error:false,
             isForgotten:false,
+            errorRecoverCode:"",
+            codeWasSent: false,
+            code:null,
         }
     },
     computed:{
@@ -121,5 +166,8 @@ export default {
     @import url('./styles/form.css');
     @import url('./styles/disabled.css');
     @import url('./styles/formsChrome.css');
+    #eye{
+        margin-left: 2rem;
+    }
 </style>
 

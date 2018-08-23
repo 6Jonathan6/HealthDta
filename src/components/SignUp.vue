@@ -8,7 +8,7 @@
                 <ul>
                     <li class="read-only-container">
                         <i class="material-icons" v-show="error">
-                            error
+                            warning
                         </i>
                         <p class="message"> {{ confirmCodeMessage }} </p>
                     </li>
@@ -31,7 +31,7 @@
                 <ul>
                 <li class="read-only-container">
                     <i class="material-icons" v-show="error">
-                        error
+                        warning
                     </i>
                     <p class="message">{{ signUpMessage }}</p>
                 </li>
