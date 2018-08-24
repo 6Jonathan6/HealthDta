@@ -56,7 +56,8 @@ const writeError = R.curry(function (vm, prop, initialMessage, isDisabled, obj) 
 
 function createUser(nikcname, email, password, vm, isDisabled) {
     disabledButton(vm, isDisabled)
-    return new User(nikcname, email, password)
+    const mail = email.toLowerCase()
+    return new User(nikcname, mail, password)
 }
 
 export{

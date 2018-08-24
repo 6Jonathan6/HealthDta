@@ -44,6 +44,8 @@
     }
     form > fieldset ul li:last-child{
         margin-top: 2.5rem;
+        display: flex;
+        justify-content: space-around;
     }
 
     /* nth-last-child(a) a=1 last child a=2 penultimate */
@@ -146,7 +148,8 @@
 
 
     input[type="submit"]{
-        width: 90px;
+        min-width: 80px;
+        width: auto;
         height: 3rem;
         font-size: 1rem;
         border: 3px outset yellow;
@@ -225,7 +228,7 @@
     opacity: 0;
 }
 
-#resend-button{
+#resend-button, .generic-buttons{
 width: 75px;
 margin-left: 1rem;
 background: #0f1e32;
@@ -235,7 +238,6 @@ border: 2px outset yellow;
 }
 
 #forgotButton{
-    margin-left: 1rem;
     width: 100px;
     background: #0f1e32;
     color: blanchedalmond;
@@ -246,10 +248,10 @@ border: 2px outset yellow;
     outline: none;
 }
 
-#resend-button:hover, #forgotButton:hover {
+#resend-button:hover, #forgotButton:hover, .generic-buttons:hover {
     transform: scale(1.1);
 }
-#resend-button:active, #forgotButton:active{
+#resend-button:active, #forgotButton:active, .generic-buttons:active{
     border-style: inset;
     transform: scale(0.9)
 }

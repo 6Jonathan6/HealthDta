@@ -1,24 +1,24 @@
 <template>
     <div id="signin-container">
         <nav-buttons @show="goTo">  </nav-buttons>
+
+
+        <transition name="recovery">
         <form id="recoverPasswordForm" @submit.prevent="recoverPassword" v-if="isForgotten">
             <fieldset >
-                <legend>Recover Password</legend>
+                <legend>Forgot Password </legend>
                 <ul>
                     <li>
                         <i class="material-icons" v-show="error">warning</i>
                        <p class="message">{{ errorRecoverCode}}</p>
                     </li>
+
+
+                    <!-- New password and write conformation code form -->
+
                     <li v-if="codeWasSent">
                         <input type="number" v-model="code" id="code" required>
                         <label for="code">Code</label>
-                    </li>
-                    <li v-if="!codeWasSent">
-                        <p class="message">
-                            <i class="material-icons"> info </i>
-                            A code will be send to your email in order to recover 
-                            your password
-                        </p>
                     </li>
                     <li v-if="codeWasSent">
                         <input id="password" :type="showPassword ? 'text' : 'password' " 
@@ -30,20 +30,36 @@
                         <p class="invalid-password-message">At least 1 lowercase and  1 uppercase letter, 1 number and 1 special character</p>
                         <button id="eye" @click.prevent="show" class="material-icons">{{ icon }} </button>
                     </li>
+                    <li v-if="codeWasSent">
+                        <button  class="generic-buttons" @click.prevent="submitNewPassword"  :disabled="isDisabled"> Submit </button>
+                    </li>
+
+
+                    <!-- Send code to username form -->
+
+                    <li v-if="!codeWasSent">
+                        <p class="message">
+                            <i class="material-icons"> info </i>
+                            A code will be send to your email in order to recover 
+                            your password
+                        </p>
+                    </li>
                     <li v-if="!codeWasSent">
                         <input type="email" v-model="username" id="username" required>
                         <label for="username">Username</label>
                     </li>
                     <li v-if="!codeWasSent">
                         <input  :class="classObject" type="submit"  value="Send code" :disabled="isDisabled">
-                    </li>
-                    <li v-if="codeWasSent">
-                        <input  :class="classObject" type="submit"  value="Send" :disabled="isDisabled">
+                        <button id="back" class="generic-buttons" @click.prevent="backToSignIn" >Back</button>
                     </li>
                 </ul>
             </fieldset>
         </form>
-        <form id="signin-form" @submit.prevent="signIn" v-else>
+        </transition>
+
+
+        <!-- Sign In form -->
+        <form id="signin-form" @submit.prevent="signIn" v-if="!isForgotten">
             <fieldset >
                 <legend>Sign In</legend>
                 <ul>
@@ -75,7 +91,10 @@
             </fieldset>
         </form>
     </div>
+
 </template>
+
+
 <script>
 import * as R from 'ramda'
 import Nav from './Nav.vue'
@@ -84,7 +103,9 @@ import {
     signIn, 
     succesfulHandler, 
     sendRecoverCode, 
-    succesfulCodeHandler 
+    succesfulCodeHandler,
+    createNewPassword,
+    newPasswordHandler, 
 
 } from './services/SignIn.js'
         
@@ -133,6 +154,19 @@ export default {
             const sendCode = R.compose(catchP(writeErrorC),then(succesfulHandler),sendRecoverCode)
             sendCode(vm,isDisabled,username)
         },
+        submitNewPassword(){
+            console.log('start')
+            const vm = this
+            const isDisabled = "isDisabled"
+            const newPasswordHandlerC = newPasswordHandler(vm)
+            const writeErrorC = writeError(vm,"errorRecoverCode","",isDisabled)
+            const newPassword = R.compose(catchP(writeErrorC),then(newPasswordHandlerC),createNewPassword)
+            newPassword(vm,isDisabled)
+        },
+
+        backToSignIn(){
+            this.isForgotten = false;
+        }
 
 
     },
@@ -162,12 +196,19 @@ export default {
 }
 </script>
 
+
 <style>
     @import url('./styles/form.css');
     @import url('./styles/disabled.css');
     @import url('./styles/formsChrome.css');
     #eye{
         margin-left: 2rem;
+    }
+    .recovery-enter-active{
+        transition: all 0.5s ease-in;
+    }
+    .recovery-enter{
+        opacity: 0;
     }
 </style>
 

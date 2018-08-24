@@ -54,7 +54,7 @@
                     <button id="eye" @click.prevent="show" class="material-icons">{{ icon }} </button>
                 </li>
                 <li>
-                    <input  id="signUpButton" :class="classObject" type="submit" value="Sign In" :disabled="isDisabled" >
+                    <input  id="signUpButton" :class="classObject" type="submit" value="Sign Up" :disabled="isDisabled" >
                 </li>
                 </ul>
             </fieldset>
