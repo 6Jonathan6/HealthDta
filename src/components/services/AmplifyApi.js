@@ -4,14 +4,21 @@ import { Config } from "./Config.js";
 API.configure(Config.Api);
 
 const writeBloodPressure = `mutation Write($User:String!,$typename:String!,$systolic:Int,$diastolyc:Int){
-    writeBloodPressure(input:{
+    writeBloodPressure(input: {
         User:$User
         typename:$typename
         systolic:$systolic
-        diastolyc:$diastolic
+        diastolyc:$diastolyc
         Type:BloodPressure
     }){
-        UseId
+        UserId
+        Type
+        Data {
+          __typename
+          ...on BloodPressure{
+            systolic
+          }
+        }
     }
 }`;
 

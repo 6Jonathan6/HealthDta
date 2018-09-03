@@ -1,28 +1,7 @@
 import Auth from "@aws-amplify/auth";
-import API, { graphqlOperation } from "@aws-amplify/api";
 import { Config } from "./Config.js";
 
 Auth.configure(Config.Auth);
-API.configure(Config.Api);
-
-const writeBloodPressure = `mutation Write($User:String!,$typename:String!,$systolic:Int,$diastolyc:Int){
-    writeBloodPressure(input: {
-        User:$User
-        typename:$typename
-        systolic:$systolic
-        diastolyc:$diastolyc
-        Type:BloodPressure
-    }){
-        UserId
-        Type
-        Data {
-          __typename
-          ...on BloodPressure{
-            systolic
-          }
-        }
-    }
-}`;
 
 function SendRecord(data) {
   return API.graphql(graphqlOperation(writeBloodPressure, data));
@@ -66,6 +45,5 @@ export {
   callAuthSignIn,
   callAuthForgotPassword,
   submitForgotPassword,
-  callAuthCurrentUser,
-  SendRecord
+  callAuthCurrentUser
 };
