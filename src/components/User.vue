@@ -34,8 +34,8 @@
 </template>
 <script>
 import * as R from "ramda";
-import { callAuthCurrentUser } from "./services/AmplifyS";
-import { SendRecord } from "./services/AmplifyApi";
+import { callAuthCurrentUser } from "./services/Amplify/Auth";
+import { SendRecord } from "./services/Amplify/Api";
 import { then, catchP, getProperty, setProperty } from "./services/Helpers";
 export default {
   created() {
