@@ -96,119 +96,125 @@
 
 
 <script>
-import * as R from 'ramda'
-import Nav from './Nav.vue'
+import * as R from "ramda";
+import Nav from "./Nav.vue";
 
-import { 
-    signIn, 
-    succesfulHandler, 
-    sendRecoverCode, 
-    succesfulCodeHandler,
-    createNewPassword,
-    newPasswordHandler, 
+import {
+  signIn,
+  succesfulHandler,
+  sendRecoverCode,
+  succesfulCodeHandler,
+  createNewPassword,
+  newPasswordHandler
+} from "./services/SignIn.js";
 
-} from './services/SignIn.js'
-        
-import { catchP, then, writeError } from './services/Helpers.js'
-import { emitShow } from './services/ShowComponent';
-
+import { catchP, then, writeError } from "./services/Helpers.js";
+import { emitShow } from "./services/ShowComponent";
 
 export default {
-    components:{
-        navButtons:Nav,
+  components: {
+    navButtons: Nav
+  },
+  methods: {
+    signIn() {
+      this.signInMessage = "Sending info...";
+      const vm = this;
+      const prop = "signInMessage";
+      const isDisabled = "isDisabled";
+      const initialMessage = "";
+      const username = vm.username;
+      const password = vm.password;
+      const writeSignInError = writeError(vm, prop, initialMessage, isDisabled);
+      const SignIn = signIn(vm, isDisabled);
+      const succesfulSignIn = succesfulHandler(vm);
+      const sendSignIn = R.compose(
+        catchP(writeSignInError),
+        then(succesfulSignIn),
+        SignIn
+      );
+      sendSignIn(username, password);
     },
-    methods:{
-        signIn(){
-            this.signInMessage = "Sending info..."
-            const vm = this
-            const prop = "signInMessage"
-            const isDisabled = "isDisabled"
-            const initialMessage = ""
-            const username = vm.username
-            const password = vm.password
-            const writeSignInError = writeError(vm,prop,initialMessage,isDisabled)
-            const SignIn =  signIn(vm,isDisabled)
-            const succesfulSignIn = succesfulHandler(vm)
-            const sendSignIn = R.compose( catchP(writeSignInError),then(succesfulSignIn), SignIn)
-            sendSignIn(username,password)
-
-
-        },
-        show(){
-            this.showPassword = !this.showPassword
-        },
-        goTo(obj){
-            const vm = this
-            emitShow(vm,obj)
-        },
-        forgotPassword(){
-            this.isForgotten = true;
-        },
-        recoverPassword(){
-            const vm = this
-            const prop = "codeWasSent"
-            const isDisabled = "isDisabled"
-            const username = vm.username
-            const writeErrorC = writeError(vm,"errorRecoverCode","",isDisabled)
-            const succesfulHandler = succesfulCodeHandler(vm,prop)
-            const sendCode = R.compose(catchP(writeErrorC),then(succesfulHandler),sendRecoverCode)
-            sendCode(vm,isDisabled,username)
-        },
-        submitNewPassword(){
-            console.log('start')
-            const vm = this
-            const isDisabled = "isDisabled"
-            const newPasswordHandlerC = newPasswordHandler(vm)
-            const writeErrorC = writeError(vm,"errorRecoverCode","",isDisabled)
-            const newPassword = R.compose(catchP(writeErrorC),then(newPasswordHandlerC),createNewPassword)
-            newPassword(vm,isDisabled)
-        },
-
-        backToSignIn(){
-            this.isForgotten = false;
-        }
-
-
+    show() {
+      this.showPassword = !this.showPassword;
     },
-    data(){
-        return {
-            username:null,
-            password:null,
-            isDisabled:false,
-            showPassword:false,
-            signInMessage: "",
-            error:false,
-            isForgotten:false,
-            errorRecoverCode:"",
-            codeWasSent: false,
-            code:null,
-        }
+    goTo(obj) {
+      const vm = this;
+      emitShow(vm, obj);
     },
-    computed:{
-        classObject(){
-            return this.isDisabled ? { disabled : true } : { disabled : false } 
-        },
+    forgotPassword() {
+      this.isForgotten = true;
+    },
+    recoverPassword() {
+      const vm = this;
+      const prop = "codeWasSent";
+      const isDisabled = "isDisabled";
+      const username = vm.username;
+      const writeErrorC = writeError(vm, "errorRecoverCode", "", isDisabled);
+      const succesfulHandler = succesfulCodeHandler(vm, prop);
+      const sendCode = R.compose(
+        catchP(writeErrorC),
+        then(succesfulHandler),
+        sendRecoverCode
+      );
+      sendCode(vm, isDisabled, username);
+    },
+    submitNewPassword() {
+      console.log("start");
+      const vm = this;
+      const isDisabled = "isDisabled";
+      const newPasswordHandlerC = newPasswordHandler(vm);
+      const writeErrorC = writeError(vm, "errorRecoverCode", "", isDisabled);
+      const newPassword = R.compose(
+        catchP(writeErrorC),
+        then(newPasswordHandlerC),
+        createNewPassword
+      );
+      newPassword(vm, isDisabled);
+    },
 
-        icon(){
-            return this.showPassword ? "visibility_off" : "visibility"
-        }
+    backToSignIn() {
+      this.isForgotten = false;
     }
-}
+  },
+  data() {
+    return {
+      username: null,
+      password: null,
+      isDisabled: false,
+      showPassword: false,
+      signInMessage: "",
+      error: false,
+      isForgotten: false,
+      errorRecoverCode: "",
+      codeWasSent: false,
+      code: null
+    };
+  },
+  computed: {
+    classObject() {
+      return this.isDisabled ? { disabled: true } : { disabled: false };
+    },
+
+    icon() {
+      return this.showPassword ? "visibility_off" : "visibility";
+    }
+  }
+};
 </script>
 
 
 <style>
-    @import url('./styles/form.css');
-    @import url('./styles/disabled.css');
-    @import url('./styles/formsChrome.css');
-    #eye{
-        margin-left: 2rem;
-    }
-    .recovery-enter-active{
-        transition: all 0.5s ease-in;
-    }
-    .recovery-enter{
-        opacity: 0;
-    }
+@import url("./styles/form.css");
+@import url("./styles/disabled.css");
+@import url("./styles/formsChrome.css");
+#eye {
+  margin-left: 2rem;
+}
+.recovery-enter-active {
+  transition: all 0.5s ease-in;
+}
+.recovery-enter {
+  opacity: 0;
+}
 </style>
 

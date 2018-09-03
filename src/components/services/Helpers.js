@@ -60,6 +60,23 @@ function createUser(nikcname, email, password, vm, isDisabled) {
     return new User(nikcname, mail, password)
 }
 
+
+/*
+    path is an array for example to get "o" in  
+
+    { x:{ o: 6 } }
+
+    the path will be ["x","o"]
+*/
+const getProperty = R.curry(function (path, obj) {
+    const lensPath = R.lensPath(path)
+    return R.view(lensPath, obj)
+})
+
+//update a  attribute of vm 
+const setProperty  = R.curry(function (vm,prop,value){
+    vm[prop] = value
+})
 export{
     createUser,
     enabledButton,
@@ -67,4 +84,6 @@ export{
     then,
     catchP,
     writeError,
+    getProperty,
+    setProperty
 }

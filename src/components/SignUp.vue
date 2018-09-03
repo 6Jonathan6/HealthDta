@@ -36,7 +36,7 @@
                     <p class="message">{{ signUpMessage }}</p>
                 </li>
                 <li>
-                    <input  id="nickname" type="text" v-model="nickname"  required>
+                    <input  id="nickname" type="text" v-model="nickname" size="12" title="Only 12 characters" required>
                     <label   for="nickname">Nickname</label> 
                 </li>
                 <li>
