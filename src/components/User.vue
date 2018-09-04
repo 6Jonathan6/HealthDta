@@ -1,11 +1,24 @@
 <template>
     <div id="user-home-container">
+    <transition name= "toggle">   
+    <div class="form-user-active" v-if="isformActive" >
+          <div id="article-container">
+            <form >
+                <fieldset>
+                  <legend>Helloworld</legend>
+                  <input type="text" name="" id="Hello">
+
+                </fieldset>
+            </form>
+          </div>
+    </div>
+    </transition>
         <aside>
             <h1>Health Data</h1>
         </aside>
         <div id="header-container">
             <header>
-                <h1> Welcome <br> {{ user }} !</h1>
+                <h1> Welcome <br> {{ user }} </h1>
             </header>
         </div>
         <div id="buttons-container">
@@ -113,7 +126,9 @@ export default {
       user: "",
       sub: "",
       systolic: 50,
-      diastolyc: 100
+      diastolyc: 100,
+      form: "",
+      isformActive: true
     };
   }
 };

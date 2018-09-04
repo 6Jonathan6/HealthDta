@@ -9,29 +9,28 @@
 
 <script>
 export default {
-  name: 'app',
-  data(){
+  name: "app",
+  data() {
     return {
-      name:null,
+      name: null
+    };
+  },
+  methods: {
+    listenShow(component) {
+      const vm = this;
+      component.showMe(vm);
     }
   },
-  methods:{
-    listenShow(component){
-      const vm = this
-      component.showMe(vm)
-    }
-  },
-  computed:{
-    showResponse(){
-      if(this.name === null){
-        return () => import('./components/Home')
+  computed: {
+    showResponse() {
+      if (this.name === null) {
+        return () => import("./components/Home");
       }
-      let component = this.name
-      return () => import(`./components/${component}`)
+      let component = this.name;
+      return () => import(`./components/${component}`);
     }
   }
-  
-}
+};
 </script>
 
 <style>
@@ -42,33 +41,33 @@ html {
 }
 
 html * {
-  box-sizing: inherit; 
+  box-sizing: inherit;
   padding: 0;
   margin: 0;
 }
-body{
-  background-color:#5886af ;
-
+body {
+  background-color: #5886af;
 }
 #app {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
-.fade-leave-active, .fade-enter-active {
+.fade-leave-active,
+.fade-enter-active {
   transition: opacity 0.15s ease-in;
 }
-.fade-enter, .fade-leave-to {
-  opacity:0;
+.fade-enter,
+.fade-leave-to {
+  opacity: 0;
 }
 
-ul{
+ul {
   list-style: none;
   border: none;
 }
 
-fieldset{
+fieldset {
   border: none;
   height: 100%;
 }
-
 </style>
