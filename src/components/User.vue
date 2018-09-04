@@ -11,20 +11,20 @@
         <div id="buttons-container">
             <ul>
                 <li>
-                    <button id="blood-pressure" title="go to Blood pressure chart" @click="writeRecord"></button>
-                    <p> <span> Blood <br> pressure</span></p>
+                    <button id="blood-pressure"  class="user-menu" title="go to Blood pressure chart" @click="writeBloodPressure"></button>
+                    <p class="flag"> <span> Blood <br> pressure</span></p>
                 </li>
                 <li>
-                    <button id="blood-sugar" title="go to Blood sugar char"></button>
-                    <p> <span> Blood <br> sugar</span></p>
+                    <button id="blood-sugar" class="user-menu" title="go to Blood sugar char"></button>
+                    <p class="flag"> <span> Blood <br> sugar</span></p>
                 </li>
                 <li>
-                    <button id="weight" title="go to weight control chart"></button>
-                    <p> <span> Weight</span></p>
+                    <button id="weight" class="user-menu" title="go to weight control chart"></button>
+                    <p class="flag"> <span> Weight</span></p>
                 </li>
                 <li>
-                    <button id="signOut" title="sign outn" class="material-icons" >power_settings_new</button>
-                    <p> <span>Sign Out</span></p>
+                    <button id="signOut" class="user-menu material-icons" title="sign out"  @click.prevent="SignOut">power_settings_new</button>
+                    <p class="flag"> <span>Sign Out</span></p>
                 </li>
             </ul>
         </div> 
@@ -34,38 +34,69 @@
 </template>
 <script>
 import * as R from "ramda";
-import { callAuthCurrentUser } from "./services/Amplify/Auth";
+import { callAuthCurrentUser, callAuthSignOut } from "./services/Amplify/Auth";
 import { SendRecord } from "./services/Amplify/Api";
 import { then, catchP, getProperty, setProperty } from "./services/Helpers";
+
 export default {
   created() {
     const vm = this;
-    const writeError = R.curry(obj => {
+
+    const errorHandler = R.curry(function(vm, obj) {
       vm.user = "Error!";
       console.log(obj);
     });
+
+    //Get and set Nickname
     const pathToNickname = ["attributes", "nickname"];
     const getNickname = getProperty(pathToNickname);
     const setNickname = setProperty(vm, "user");
+
     //composition on getNicknmae and setNickname
-    const updateNickname = R.compose(setNickname, getNickname);
-    const getAndUpdateNickname = R.compose(
-      catchP(writeError),
-      then(updateNickname),
+    const getAndSetNickname = R.compose(setNickname, getNickname);
+
+    //Get and set sub
+    const pathToSub = ["username"];
+    const getSub = getProperty(pathToSub);
+    const setSub = setProperty(vm, "sub");
+
+    //composition on getSub and setSub
+    const getAndSetSub = R.tap(R.compose(setSub, getSub));
+
+    const setData = R.compose(
+      catchP(errorHandler(vm)),
+      then(R.compose(getAndSetNickname, getAndSetSub)),
       callAuthCurrentUser
     );
 
-    getAndUpdateNickname();
+    setData();
   },
 
   methods: {
-    writeRecord() {
-      const data = {
-        User: "Jony",
-        typename: "BloodPressure",
-        systolic: 80,
-        diastolyc: 100
+    SignOut() {
+      const reload = obj => {
+        location.reload();
       };
+      const signOut = R.compose(
+        catchP(error => {
+          console.log(error);
+        }),
+        then(reload),
+        callAuthSignOut
+      );
+      signOut();
+    },
+    writeBloodPressure() {
+      const vm = this;
+      const data = Object.assign(
+        {},
+        {
+          User: vm.sub,
+          typename: "BloodPressure",
+          systolic: vm.systolic,
+          diastolyc: vm.diastolyc
+        }
+      );
 
       SendRecord(data)
         .then(response => {
@@ -79,7 +110,10 @@ export default {
 
   data() {
     return {
-      user: ""
+      user: "",
+      sub: "",
+      systolic: 50,
+      diastolyc: 100
     };
   }
 };

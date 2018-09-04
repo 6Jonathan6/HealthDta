@@ -36,7 +36,9 @@ function callAuthCurrentUser() {
   return Auth.currentAuthenticatedUser();
 }
 
-//User properties
+function callAuthSignOut() {
+  return Auth.signOut();
+}
 
 export {
   callAuthsignUp,
@@ -45,5 +47,6 @@ export {
   callAuthSignIn,
   callAuthForgotPassword,
   submitForgotPassword,
-  callAuthCurrentUser
+  callAuthCurrentUser,
+  callAuthSignOut
 };
