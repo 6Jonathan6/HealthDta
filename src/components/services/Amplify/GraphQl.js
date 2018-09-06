@@ -1,8 +1,6 @@
 //Text for queries and mutations
-const writeBloodPressureText = `mutation Write($User:String!,$typename:String!,$systolic:Int,$diastolyc:Int){
-    writeBloodPressure(input: {
-        User:$User
-        typename:$typename
+const writeBloodPressureText = `mutation Write($systolic:Int,$diastolyc:Int){
+    write(input: {
         systolic:$systolic
         diastolyc:$diastolyc
         Type:BloodPressure
@@ -13,6 +11,7 @@ const writeBloodPressureText = `mutation Write($User:String!,$typename:String!,$
           __typename
           ...on BloodPressure{
             systolic
+            diastolyc
           }
         }
     }

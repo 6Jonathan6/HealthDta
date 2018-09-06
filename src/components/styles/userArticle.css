@@ -1,0 +1,83 @@
+#user-form-container {
+  grid-area: 1 / 1 / 3 / -1;
+  display: flex;
+  flex-flow: row;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  align-items: space-between;
+  align-content: center;
+  height: 100%;
+  width: 100%;
+}
+
+#user-form-container form {
+  min-width: 250px;
+  max-width: 350px;
+  height: 300px;
+  border-radius: 5%;
+  background-color: #e6e6e6;
+  padding: 1rem;
+  margin-top: 1rem;
+  color: #152939;
+}
+#user-form-container form fieldset legend {
+  border-bottom: 0.2rem solid #0362fc;
+  border-left: 0.5rem solid #0362fc;
+  margin-bottom: 1rem;
+  font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
+  font-size: 2rem;
+  font-weight: bolder;
+  padding-left: 0.5rem;
+}
+#user-form-container form fieldset ul {
+  height: 100%;
+  display: flex;
+  flex-flow: column;
+  justify-items: space-around;
+  align-content: center;
+}
+
+#user-form-container form fieldset ul li:first-child {
+  height: 4rem;
+  margin-bottom: 1rem;
+}
+
+#user-form-container form fieldset ul li input:required {
+  height: 2rem;
+  width: 100%;
+  background: #00b9f2;
+  border: none;
+  border-radius: 5px;
+  font-family: monospace;
+  font-size: 1.8rem;
+  color: #152939;
+  font-weight: 400;
+}
+
+#user-form-container form fieldset ul li label {
+  font-family: monospace;
+  font-weight: 400;
+  color: #0f1e32;
+  font-size: 1.8rem;
+}
+
+#user-form-container form fieldset ul li input[type="submit"] {
+  height: 3rem;
+  width: 100%;
+  font-family: fantasy;
+  background: #ff9900;
+  border-radius: 10px;
+  font-size: 2rem;
+  font-weight: bolder;
+  color: cornsilk;
+  margin-top: 0.5rem;
+}
+
+#data-table {
+  height: 400px;
+  min-width: 260px;
+  max-width: 350px;
+  border: 1px solid;
+  flex: 1 1;
+  padding: 1rem;
+}
