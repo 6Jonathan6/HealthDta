@@ -19,3 +19,7 @@ yarn-error.log*
 *.njsproj
 *.sln
 *.sw*
+
+
+# files
+/src/components/services/Amplify/Config.js
