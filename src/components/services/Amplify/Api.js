@@ -1,5 +1,5 @@
 import API, { graphqlOperation } from "@aws-amplify/api";
-import { Config } from "./Config.js";
+import { Config } from "./Config.con.js";
 import { writeBloodPressureText } from "./GraphQl";
 import * as R from "ramda";
 //Configuration
