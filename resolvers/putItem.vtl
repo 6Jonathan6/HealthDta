@@ -1,0 +1,37 @@
+##Request
+##Dont forgot $ctc.args.input when in schema you defined datainput
+
+#set( $username = $context.identity.username )
+#set( $type = $context.arguments.input.Type)
+{
+    "version" : "2017-02-28",
+    "operation" : "PutItem",
+    "key" : {
+        ## If object "id" should come from GraphQL arguments, change to $util.dynamodb.toDynamoDBJson($ctx.args.id)
+        "UserId": $util.dynamodb.toDynamoDBJson($username),
+        "CreatedAt": $util.dynamodb.toDynamoDBJson($util.time.nowISO8601())
+    },
+    "attributeValues" :{
+     "Type" : $util.dynamodb.toDynamoDBJson($type),
+     
+    	"Data": {
+    		"M": {
+      		"__typename": $util.dynamodb.toDynamoDBJson($type),
+      		#if( $type == "BloodPressure" )
+      			"diastolyc": $util.dynamodb.toDynamoDBJson($context.arguments.input.diastolyc),
+      			"systolic":  $util.dynamodb.toDynamoDBJson($context.arguments.input.systolic)
+      		#elseif( $type == "BloodSugarLevel" )
+      			"level": $util.dynamodb.toDynamoDBJson($context.arguments.input.level)
+      		#else
+      			"weight": $util.dynamodb.toDynamoDBJson($context.arguments.input.weight)
+      		#end
+    	}
+  	}
+  }
+}
+
+
+
+##response 
+## Pass back the result from DynamoDB. **
+$util.toJson($ctx.result)
