@@ -70,6 +70,7 @@ const getProperty = R.curry(function(path, obj) {
 const setProperty = R.curry(function(vm, prop, value) {
   vm[prop] = value;
 });
+
 export {
   createUser,
   enabledButton,

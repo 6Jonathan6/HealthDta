@@ -1,5 +1,5 @@
 import Auth from "@aws-amplify/auth";
-import { Config } from "./Config.js";
+import { Config } from "./Config.con.js";
 
 Auth.configure(Config.Auth);
 

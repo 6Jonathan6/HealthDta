@@ -14,30 +14,49 @@
     </div>
 </template>
 <script>
-import { showComponent, emitShow } from './services/ShowComponent.js'
+import * as R from "ramda";
+import { showComponent, emitShow } from "./services/ShowComponent.js";
+import { callAuthCurrentUser } from "./services/Amplify/Auth.js";
+import { catchP, then } from "./services/Helpers.js";
 export default {
-    methods:{
-        showAbout(){showComponent
-            const showAbout = showComponent('About.vue')
-            const vm = this
-            emitShow(vm,{ showMe:showAbout })
-        },
-        showSignUp(){
-            const vm = this
-            const showSignUp = showComponent('SignUp.vue')
-            emitShow(vm,{showMe:showSignUp})
-        },
-        showSignIn(){
-            const vm = this
-            const showSignIn = showComponent('SignIn.vue')
-            emitShow(vm,{showMe:showSignIn})
-        }
-
+  created() {
+    const vm = this;
+    const credentials = R.curry(function(vm, obj) {
+      const showUser = {
+        showMe: showComponent("User.vue"),
+        username: obj.username
+      };
+      emitShow(vm, showUser);
+    });
+    const noCredentials = error => error;
+    const checkForCredentials = R.compose(
+      catchP(noCredentials),
+      then(credentials(vm)),
+      callAuthCurrentUser
+    );
+    checkForCredentials();
+  },
+  methods: {
+    showAbout() {
+      showComponent;
+      const showAbout = showComponent("About.vue");
+      const vm = this;
+      emitShow(vm, { showMe: showAbout });
+    },
+    showSignUp() {
+      const vm = this;
+      const showSignUp = showComponent("SignUp.vue");
+      emitShow(vm, { showMe: showSignUp });
+    },
+    showSignIn() {
+      const vm = this;
+      const showSignIn = showComponent("SignIn.vue");
+      emitShow(vm, { showMe: showSignIn });
     }
-} 
+  }
+};
 </script>
 
 <style>
-   @import url('./styles/home.css');
-
+@import url("./styles/home.css");
 </style>
