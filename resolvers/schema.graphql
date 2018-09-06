@@ -1,0 +1,55 @@
+﻿union Data = BloodPressure | BloodSugarLevel | Weight
+
+type BloodPressure {
+  diastolyc: Int!
+  systolic: Int!
+}
+
+type BloodSugarLevel {
+  level: Float!
+}
+
+type Mutation {
+  write(input: DataInput): UserData!
+}
+
+type Query {
+  getUserData(userId: String!): UserDataList!
+  getUserDataByType(type: String!, userId: String!): UserDataList!
+}
+
+type UserData {
+  CreatedAt: String!
+  Data: Data
+  Type: DataType!
+  UserId: String!
+}
+
+type UserDataList {
+  items: [UserData]
+}
+
+type Weight {
+  photo: String
+  weight: Float!
+}
+
+type schema {
+  mutation: Mutation
+  query: Query
+}
+
+enum DataType {
+  BloodPressure
+  BloodSugarLevel
+  Weight
+}
+
+input DataInput {
+  Type: DataType!
+  diastolyc: Int
+  level: Float
+  photo: String
+  systolic: Int
+  weight: Int
+}
