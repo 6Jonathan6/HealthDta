@@ -24,7 +24,7 @@ export default {
   computed: {
     showResponse() {
       if (this.name === null) {
-        return () => import("./components/Home");
+        return () => import("./components/Home.vue");
       }
       let component = this.name;
       return () => import(`./components/${component}`);

@@ -1,16 +1,11 @@
 <template>
     <div id="user-home-container">
     <transition name= "toggle">   
-    <div class="form-user-active" v-if="isformActive" >
-          <div id="article-container">
-            <form >
-                <fieldset>
-                  <legend>Helloworld</legend>
-                  <input type="text" name="" id="Hello">
-
-                </fieldset>
-            </form>
-          </div>
+    <div class="form-user-active" v-if="isArticleActive" >
+      <article id="blood-pressure-form" class="user-article">
+          <button id="exit" class="material-icons " @click.prevent="closeSection">close</button>
+          <component :is="componentName" ></component>
+      </article>
     </div>
     </transition>
         <aside>
@@ -24,7 +19,7 @@
         <div id="buttons-container">
             <ul>
                 <li>
-                    <button id="blood-pressure"  class="user-menu" title="go to Blood pressure chart" @click="writeBloodPressure"></button>
+                    <button id="blood-pressure"  class="user-menu" title="go to Blood pressure chart" @click.prevent="goToArticle"></button>
                     <p class="flag"> <span> Blood <br> pressure</span></p>
                 </li>
                 <li>
@@ -86,6 +81,10 @@ export default {
   },
 
   methods: {
+    closeSection() {
+      this.isArticleActive = false;
+      this.articleName = null;
+    },
     SignOut() {
       const reload = obj => {
         location.reload();
@@ -99,25 +98,26 @@ export default {
       );
       signOut();
     },
-    writeBloodPressure() {
+    goToArticle(evt) {
       const vm = this;
-      const data = Object.assign(
-        {},
-        {
-          User: vm.sub,
-          typename: "BloodPressure",
-          systolic: vm.systolic,
-          diastolyc: vm.diastolyc
-        }
-      );
+      const buttonId = evt.target.id;
+      switch (buttonId) {
+        case "blood-pressure":
+          const articleName = "BloodPressure.vue";
+          vm.articleName = articleName;
+          vm.isArticleActive = true;
+          break;
+      }
+    }
+  },
 
-      SendRecord(data)
-        .then(response => {
-          console.log(response);
-        })
-        .catch(error => {
-          console.log(error);
-        });
+  computed: {
+    componentName() {
+      const vm = this;
+      if (!vm.isArticleActive) {
+        return;
+      }
+      return () => import(`./UserForms/${vm.articleName}`);
     }
   },
 
@@ -127,8 +127,8 @@ export default {
       sub: "",
       systolic: 50,
       diastolyc: 100,
-      form: "",
-      isformActive: true
+      articleName: "",
+      isArticleActive: false
     };
   }
 };
