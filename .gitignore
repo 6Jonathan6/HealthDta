@@ -20,5 +20,5 @@ yarn-error.log*
 *.sln
 *.sw*
 
-# files
-/src/components/services/Amplify/Config.js
+# Config
+.con.js
