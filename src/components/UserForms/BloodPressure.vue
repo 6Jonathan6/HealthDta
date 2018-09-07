@@ -13,24 +13,147 @@
                         <input type="number" v-model="diastolyc" min="0" max="1000" id="systolic" required>
                     </li>
                     <li>
-                        <input type="submit" value="Save" >
+                        <input id="submit-button" :class="disabledButton" type="submit" value="Save"  :disabled="isDisabled">
+                    </li>
+                    <li>
+                        <p>  
+                            <i class="material-icons" v-show="error">warning</i>
+                             {{ message }}
+                        </p>
                     </li>
                 </ul>
             </fieldset>
         </form>
         <div id="data-table">
-            <h1>Hello otro div</h1>
+          <table>
+            <caption>Blood Pressure Table </caption>
+            <thead>
+              <tr>
+                <th scope="column">Date</th>
+                <th scope="column">Time</th>
+                <th scope="column" title="Systolic Blood Pressure"><abbr>SBP</abbr></th>
+                <th scope="column"> <abbr title="Diastolyc Blood Pressure">DBP</abbr> </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="(item, index ) in parsedDateTime" :key="index">
+                  <td class="time-cell"> <p> {{ item.CreatedAt.toLocaleDateString() }} </p> </td>
+                  <td class="time-cell"> <p> {{ item.CreatedAt.toLocaleTimeString() }} </p> </td>
+                  <td>{{ item.Data.systolic}}</td>
+                  <td>{{ item.Data.diastolyc }}</td>
+              </tr>
+            </tbody>
+            <tfoot>
+              <tr>
+                <td colspan="4">Units mmHg </td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+        <div id="chart-container">
+        <button @click.prevent="showChart">Update chart</button>
+          <canvas  id="chart" ref="canvas" width="400" height="400"></canvas>
         </div>
     </div>
 </template>
 <script>
-import { writeBloodPressure } from "../services/Amplify/Api";
-import { catchP, then } from "../services/Helpers";
+import { writeBloodPressure, getRecords } from "../services/Amplify/Api";
+import {
+  catchP,
+  then,
+  disabledButton,
+  writeError,
+  setProperty,
+  getProperty
+} from "../services/Helpers";
+import { successHandler, parseDate } from "../services/BloodPressure";
 import * as R from "ramda";
+import Chart from "chart.js";
 export default {
+  created() {
+    const vm = this;
+    const setData = setProperty(vm, "bloodPressureData");
+    const pathToItems = ["data", "getUserDataByType", "items"];
+    const getItems = getProperty(pathToItems);
+    const successHandler = R.compose(setData, getItems);
+    const type = { type: "BloodPressure" };
+
+    const errorHandler = error => {
+      alert(error);
+    };
+    const getRecordsCom = R.compose(
+      catchP(errorHandler),
+      then(successHandler),
+      getRecords
+    );
+
+    getRecordsCom(type);
+  },
   methods: {
+    showChart() {
+      const data = R.reverse(R.pluck("Data", this.bloodPressureData));
+      const systolic = R.pluck("systolic", data);
+      const diastolyc = R.pluck("diastolyc", data);
+      const dates = R.reverse(R.pluck("CreatedAt", this.bloodPressureData));
+      const ctx = this.$refs.canvas;
+
+      const myChart = new Chart(ctx, {
+        type: "line",
+        data: {
+          labels: dates,
+          datasets: [
+            {
+              data: systolic,
+              label: "Sytolic",
+              borderColor: "#d81a08",
+              borderWidth: 2,
+              fill: false
+            },
+            {
+              data: diastolyc,
+              label: "Diastolyc",
+              borderColor: "#0820d8",
+              borderWidth: 2,
+              fill: false
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          title: {
+            display: true,
+            text: "Blood Pressure"
+          },
+          scales: {
+            xAxes: [
+              {
+                type: "time",
+                time: {
+                  unit: "day"
+                }
+              }
+            ]
+          }
+        }
+      });
+    },
     save() {
       const vm = this;
+      const isDisabled = "isDisabled";
+      const arrayProp = "bloodPressureData";
+      const propMessage = "message";
+
+      disabledButton(vm, isDisabled);
+
+      const errorHandler = writeError(vm, propMessage, "", isDisabled);
+
+      const successHandlerCurried = successHandler(
+        vm,
+        arrayProp,
+        isDisabled,
+        propMessage
+      );
+
       const data = Object.assign(
         {},
         {
@@ -39,19 +162,35 @@ export default {
         }
       );
 
-      const log = obj => {
-        console.log(obj);
-      };
-      const saveData = R.compose(catchP(log), then(log), writeBloodPressure);
+      const saveData = R.compose(
+        catchP(errorHandler),
+        then(successHandlerCurried),
+        writeBloodPressure
+      );
       saveData(data);
     }
   },
 
   data() {
     return {
+      bloodPressureData: [],
       systolic: null,
-      diastolyc: null
+      diastolyc: null,
+      message: "",
+      error: false,
+      isDisabled: false
     };
+  },
+  computed: {
+    disabledButton() {
+      return this.isDisabled
+        ? { disabledButton: true }
+        : { disabledButton: false };
+    },
+    parsedDateTime() {
+      const array = this.bloodPressureData.map(parseDate);
+      return R.reverse(array);
+    }
   }
 };
 </script>

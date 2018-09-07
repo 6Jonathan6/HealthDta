@@ -5,8 +5,7 @@ const writeBloodPressureText = `mutation Write($systolic:Int,$diastolyc:Int){
         diastolyc:$diastolyc
         Type:BloodPressure
     }){
-        UserId
-        Type
+        CreatedAt
         Data {
           __typename
           ...on BloodPressure{
@@ -17,6 +16,19 @@ const writeBloodPressureText = `mutation Write($systolic:Int,$diastolyc:Int){
     }
 }`;
 
+const getRecordsText = `query getUserDataByType ($type: String!) {
+    getUserDataByType(type: $type){
+        items {
+            CreatedAt
+            Data {
+                ...on BloodPressure {
+                    systolic
+                    diastolyc
+                }
+            }
+        }
+    }
+}`;
 // const getBloodPressureText = `query `
 
-export { writeBloodPressureText };
+export { writeBloodPressureText, getRecordsText };

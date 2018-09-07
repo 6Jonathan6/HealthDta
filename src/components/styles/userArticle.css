@@ -12,8 +12,8 @@
 
 #user-form-container form {
   min-width: 250px;
-  max-width: 350px;
-  height: 300px;
+  max-width: 270px;
+  height: 330px;
   border-radius: 5%;
   background-color: #e6e6e6;
   padding: 1rem;
@@ -33,15 +33,26 @@
   height: 100%;
   display: flex;
   flex-flow: column;
-  justify-items: space-around;
+  justify-items: center;
   align-content: center;
 }
-
+#user-form-container form fieldset ul li {
+  margin-top: 0;
+}
 #user-form-container form fieldset ul li:first-child {
   height: 4rem;
   margin-bottom: 1rem;
 }
 
+#user-form-container form fieldset ul li:last-child {
+  margin: 0.5rem;
+}
+#user-form-container form fieldset ul li:last-child p {
+  margin: 0;
+  color: red;
+  font-size: 0.8rem;
+  font-family: monospace;
+}
 #user-form-container form fieldset ul li input:required {
   height: 2rem;
   width: 100%;
@@ -49,7 +60,7 @@
   border: none;
   border-radius: 5px;
   font-family: monospace;
-  font-size: 1.8rem;
+  font-size: 1.3rem;
   color: #152939;
   font-weight: 400;
 }
@@ -58,26 +69,90 @@
   font-family: monospace;
   font-weight: 400;
   color: #0f1e32;
-  font-size: 1.8rem;
+  font-size: 1.5rem;
+  margin-top: 1rem;
 }
 
 #user-form-container form fieldset ul li input[type="submit"] {
-  height: 3rem;
+  height: 2.5rem;
   width: 100%;
   font-family: fantasy;
   background: #ff9900;
   border-radius: 10px;
-  font-size: 2rem;
+  font-size: 1.5rem;
   font-weight: bolder;
   color: cornsilk;
   margin-top: 0.5rem;
 }
 
 #data-table {
-  height: 400px;
+  height: 200px;
   min-width: 260px;
   max-width: 350px;
-  border: 1px solid;
+  padding-left: 1%;
+  padding-right: 1%;
   flex: 1 1;
-  padding: 1rem;
+  overflow-y: scroll;
+}
+
+#data-table table {
+  border-collapse: collapse;
+  width: 98%;
+  border: none;
+  table-layout: auto;
+}
+caption {
+  font-size: 1.3rem;
+  color: #0f1e32;
+}
+
+#data-table thead {
+  border-bottom: 3px solid#31465f;
+  color: #0f1e32;
+}
+
+tfoot {
+  border: 3px solid#31465f;
+}
+td {
+  color: #152939;
+  background: #28c3f3;
+  font-size: 1.1rem;
+  font-family: monospace;
+  border-left: 2px dashed;
+  border-right: 2px dashed #55677d;
+  text-align: center;
+  font-weight: 400;
+}
+
+.time-cell {
+  font-size: 0.9rem;
+}
+
+/* #data-table table thead {
+} */
+
+.disabledButton {
+  opacity: 0.3;
+}
+
+/* Chart */
+
+#chart-container {
+  grid-area: 3 / 1 / -1 / -1;
+  height: auto;
+  width: 100%;
+  background: white;
+  margin-top: 2rem;
+}
+
+#chart-container button {
+  background: rgb(62, 24, 186);
+  height: 50px;
+  width: 70px;
+  border-radius: 5px;
+  font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
+  color: white;
+  font-size: 1.1rem;
+  font-weight: bolder;
 }

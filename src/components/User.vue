@@ -63,17 +63,9 @@ export default {
     //composition on getNicknmae and setNickname
     const getAndSetNickname = R.compose(setNickname, getNickname);
 
-    //Get and set sub
-    const pathToSub = ["username"];
-    const getSub = getProperty(pathToSub);
-    const setSub = setProperty(vm, "sub");
-
-    //composition on getSub and setSub
-    const getAndSetSub = R.tap(R.compose(setSub, getSub));
-
     const setData = R.compose(
       catchP(errorHandler(vm)),
-      then(R.compose(getAndSetNickname, getAndSetSub)),
+      then(R.compose(getAndSetNickname)),
       callAuthCurrentUser
     );
 
@@ -124,9 +116,6 @@ export default {
   data() {
     return {
       user: "",
-      sub: "",
-      systolic: 50,
-      diastolyc: 100,
       articleName: "",
       isArticleActive: false
     };
