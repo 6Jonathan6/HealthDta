@@ -15,7 +15,7 @@ const writeBloodPressureText = `mutation Write($systolic:Int,$diastolyc:Int){
         }
     }
 }`;
-const writeBloodSugarLevel = `mutation Write($level:Int!){
+const writeBloodSugarLevelText = `mutation Write($level:Float!){
     write(input: {
         level:$level
         Type:BloodSugarLevel
@@ -24,6 +24,20 @@ const writeBloodSugarLevel = `mutation Write($level:Int!){
         Data {
           ...on BloodSugarLevel{
             level
+          }
+        }
+    }
+}`;
+
+const writeWeightText = `mutation Write($weight:Float!){
+    write(input: {
+        weight:$weight
+        Type:Weight
+    }){ 
+        CreatedAt
+        Data {
+          ...on Weight{
+            weight
           }
         }
     }
@@ -41,10 +55,18 @@ const getRecordsText = `query getUserDataByType ($type: String!) {
                 ...on BloodSugarLevel {
                     level
                 }
+                ...on Weight {
+                    weight
+                }
             }
         }
     }
 }`;
 // const getBloodPressureText = `query `
 
-export { writeBloodPressureText, getRecordsText, writeBloodSugarLevelText };
+export {
+  writeBloodPressureText,
+  getRecordsText,
+  writeBloodSugarLevelText,
+  writeWeightText
+};

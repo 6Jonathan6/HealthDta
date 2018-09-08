@@ -66,7 +66,7 @@ import {
   setProperty,
   getProperty
 } from "../services/Helpers";
-import { successHandler, parseDate } from "../services/BloodPressure";
+import { successHandler, parseDate } from "../services/ArtcicleHelpers";
 import * as R from "ramda";
 import Chart from "chart.js";
 export default {
@@ -96,7 +96,6 @@ export default {
       const diastolyc = R.pluck("diastolyc", data);
       const dates = R.pluck("CreatedAt", this.bloodPressureData);
       const ctx = this.$refs.canvas;
-      Chart.defaults.global.elements.point.pointSytle = "triangle";
       const myChart = new Chart(ctx, {
         type: "line",
         data: {
@@ -144,6 +143,7 @@ export default {
       const isDisabled = "isDisabled";
       const arrayProp = "bloodPressureData";
       const propMessage = "message";
+      const type = "BloodPressure";
 
       disabledButton(vm, isDisabled);
 
@@ -153,7 +153,8 @@ export default {
         vm,
         arrayProp,
         isDisabled,
-        propMessage
+        propMessage,
+        type
       );
 
       const data = Object.assign(

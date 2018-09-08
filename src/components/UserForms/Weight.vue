@@ -2,11 +2,11 @@
     <div id="user-form-container">
         <form @submit.prevent = "save">
             <fieldset >
-                <legend>Blood Sugar Level</legend>
+                <legend>Weight Control</legend>
                 <ul>
                     <li>
-                        <label for="level">Level:</label>
-                        <input type="number" v-model="level" min="0" max="1000" step="0.01" id="level" required>
+                        <label for="weight">Weight:</label>
+                        <input type="number" v-model="weight" min="0" max="200" step="0.01" id="weight" required>
                     </li>
                     <li>
                         <input id="submit-button" :class="disabledButton" type="submit" value="Save"  :disabled="isDisabled">
@@ -22,7 +22,7 @@
         </form>
         <div id="data-table">
           <table>
-            <caption>Blood Sugar </caption>
+            <caption>Weight </caption>
             <thead>
               <tr>
                 <th scope="column">Date</th>
@@ -34,12 +34,12 @@
               <tr v-for="(item, index ) in parsedDateTime" :key="index">
                   <td class="time-cell"> <p> {{ item.CreatedAt.toLocaleDateString() }} </p> </td>
                   <td class="time-cell"> <p> {{ item.CreatedAt.toLocaleTimeString() }} </p> </td>
-                  <td>{{ item.Data.level}}</td>
+                  <td>{{ item.Data.weight}}</td>
               </tr>
             </tbody>
             <tfoot>
               <tr>
-                <td colspan="3">Units mM </td>
+                <td colspan="3">Units Kg </td>
               </tr>
             </tfoot>
           </table>
@@ -51,7 +51,7 @@
     </div>
 </template>
 <script>
-import { writeBloodSugarLevel, getRecords } from "../services/Amplify/Api";
+import { writeWeight, getRecords } from "../services/Amplify/Api";
 import {
   catchP,
   then,
@@ -66,11 +66,11 @@ import Chart from "chart.js";
 export default {
   created() {
     const vm = this;
-    const setData = setProperty(vm, "bloodSugarLevelR");
+    const setData = setProperty(vm, "weightR");
     const pathToItems = ["data", "getUserDataByType", "items"];
     const getItems = getProperty(pathToItems);
     const successHandler = R.compose(setData, getItems);
-    const type = { type: "BloodSugarLevel" };
+    const type = { type: "Weight" };
 
     const errorHandler = error => {
       alert(error);
@@ -85,9 +85,9 @@ export default {
   },
   methods: {
     showChart() {
-      const data = R.pluck("Data", this.bloodSugarLevelR);
-      const level = R.pluck("level", data);
-      const dates = R.pluck("CreatedAt", this.bloodSugarLevelR);
+      const data = R.pluck("Data", this.weightR);
+      const weight = R.pluck("weight", data);
+      const dates = R.pluck("CreatedAt", this.weightR);
       const ctx = this.$refs.canvas;
       const myChart = new Chart(ctx, {
         type: "line",
@@ -95,8 +95,8 @@ export default {
           labels: dates,
           datasets: [
             {
-              data: level,
-              label: "Level",
+              data: weight,
+              label: "Weight",
               borderColor: "#d81a08",
               borderWidth: 2,
               fill: true
@@ -107,7 +107,7 @@ export default {
           responsive: true,
           title: {
             display: true,
-            text: "Blood Sugar Level",
+            text: "Weight",
             fontSize: 25
           },
           scales: {
@@ -127,9 +127,9 @@ export default {
     save() {
       const vm = this;
       const isDisabled = "isDisabled";
-      const arrayProp = "bloodSugarLevelR";
+      const arrayProp = "weightR";
       const propMessage = "message";
-      const type = "BloodSugarLevel";
+      const type = "Weight";
 
       disabledButton(vm, isDisabled);
 
@@ -146,14 +146,14 @@ export default {
       const data = Object.assign(
         {},
         {
-          level: vm.level
+          weight: vm.weight
         }
       );
 
       const saveData = R.compose(
         catchP(errorHandler),
         then(successHandlerCurried),
-        writeBloodSugarLevel
+        writeWeight
       );
       saveData(data);
     }
@@ -161,8 +161,8 @@ export default {
 
   data() {
     return {
-      bloodSugarLevelR: [],
-      level: null,
+      weightR: [],
+      weight: null,
       message: "",
       error: false,
       isDisabled: false
@@ -175,7 +175,7 @@ export default {
         : { disabledButton: false };
     },
     parsedDateTime() {
-      const array = this.bloodSugarLevelR.map(parseDate);
+      const array = this.weightR.map(parseDate);
       return R.reverse(array);
     }
   }

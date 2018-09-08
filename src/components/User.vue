@@ -23,11 +23,11 @@
                     <p class="flag"> <span> Blood <br> pressure</span></p>
                 </li>
                 <li>
-                    <button id="blood-sugar" class="user-menu" title="go to Blood sugar char"></button>
+                    <button id="blood-sugar" class="user-menu" title="go to Blood sugar char" @click.prevent="goToArticle"></button>
                     <p class="flag"> <span> Blood <br> sugar</span></p>
                 </li>
                 <li>
-                    <button id="weight" class="user-menu" title="go to weight control chart"></button>
+                    <button id="weight" class="user-menu" title="go to weight control chart" @click.prevent="goToArticle"></button>
                     <p class="flag"> <span> Weight</span></p>
                 </li>
                 <li>
@@ -43,7 +43,6 @@
 <script>
 import * as R from "ramda";
 import { callAuthCurrentUser, callAuthSignOut } from "./services/Amplify/Auth";
-import { SendRecord } from "./services/Amplify/Api";
 import { then, catchP, getProperty, setProperty } from "./services/Helpers";
 
 export default {
@@ -93,9 +92,22 @@ export default {
     goToArticle(evt) {
       const vm = this;
       const buttonId = evt.target.id;
+      let articleName = "";
       switch (buttonId) {
         case "blood-pressure":
-          const articleName = "BloodPressure.vue";
+          articleName = "BloodPressure.vue";
+          vm.articleName = articleName;
+          vm.isArticleActive = true;
+          break;
+
+        case "blood-sugar":
+          articleName = "SugarLevel.vue";
+          vm.articleName = articleName;
+          vm.isArticleActive = true;
+          break;
+
+        case "weight":
+          articleName = "Weight.vue";
           vm.articleName = articleName;
           vm.isArticleActive = true;
           break;

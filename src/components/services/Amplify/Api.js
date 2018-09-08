@@ -3,7 +3,8 @@ import { Config } from "./Config.con.js";
 import {
   writeBloodPressureText,
   getRecordsText,
-  writeBloodSugarLevelText
+  writeBloodSugarLevelText,
+  writeWeightText
 } from "./GraphQl";
 import * as R from "ramda";
 //Configuration
@@ -21,7 +22,8 @@ const fetchData = R.curry(function(queryText, data) {
 //Mutations
 const writeBloodPressure = saveData(writeBloodPressureText);
 const writeBloodSugarLevel = saveData(writeBloodSugarLevelText);
+const writeWeight = saveData(writeWeightText);
 //Queries
 const getRecords = fetchData(getRecordsText);
 
-export { writeBloodPressure, writeBloodSugarLevel, getRecords };
+export { writeBloodPressure, writeBloodSugarLevel, getRecords, writeWeight };
