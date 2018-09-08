@@ -2,15 +2,11 @@
     <div id="user-form-container">
         <form @submit.prevent = "save">
             <fieldset >
-                <legend>Blood Presure</legend>
+                <legend>Blood Sugar Level</legend>
                 <ul>
                     <li>
-                        <label for="systolic">Systolic:</label>
+                        <label for="systolic">Level:</label>
                         <input type="number" v-model="systolic" min="0" max="1000" id="systolic" required>
-                    </li>
-                    <li>
-                        <label for="systolic">Diastolyc</label>
-                        <input type="number" v-model="diastolyc" min="0" max="1000" id="systolic" required>
                     </li>
                     <li>
                         <input id="submit-button" :class="disabledButton" type="submit" value="Save"  :disabled="isDisabled">
@@ -26,26 +22,24 @@
         </form>
         <div id="data-table">
           <table>
-            <caption>Blood Pressure Table </caption>
+            <caption>Blood Sugar </caption>
             <thead>
               <tr>
                 <th scope="column">Date</th>
                 <th scope="column">Time</th>
-                <th scope="column" title="Systolic Blood Pressure"><abbr>SBP</abbr></th>
-                <th scope="column"> <abbr title="Diastolyc Blood Pressure">DBP</abbr> </th>
+                <th scope="column"> Level </th>
               </tr>
             </thead>
             <tbody>
               <tr v-for="(item, index ) in parsedDateTime" :key="index">
                   <td class="time-cell"> <p> {{ item.CreatedAt.toLocaleDateString() }} </p> </td>
                   <td class="time-cell"> <p> {{ item.CreatedAt.toLocaleTimeString() }} </p> </td>
-                  <td>{{ item.Data.systolic}}</td>
-                  <td>{{ item.Data.diastolyc }}</td>
+                  <td>{{ item.Data.level}}</td>
               </tr>
             </tbody>
             <tfoot>
               <tr>
-                <td colspan="4">Units mmHg </td>
+                <td colspan="3">Units mM </td>
               </tr>
             </tfoot>
           </table>
@@ -57,7 +51,7 @@
     </div>
 </template>
 <script>
-import { writeBloodPressure, getRecords } from "../services/Amplify/Api";
+import { writeBloodSugarLevel, getRecords } from "../services/Amplify/Api";
 import {
   catchP,
   then,
@@ -147,7 +141,7 @@ export default {
 
       disabledButton(vm, isDisabled);
 
-      const errorHandler = writeError(vm, propMessage, "", isDisabled);
+      // const errorHandler = writeError(vm, propMessage, "", isDisabled);
 
       const successHandlerCurried = successHandler(
         vm,
@@ -200,4 +194,3 @@ export default {
 <style>
 @import url("../styles/userArticle.css");
 </style>
-

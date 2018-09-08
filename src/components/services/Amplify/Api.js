@@ -1,6 +1,10 @@
 import API, { graphqlOperation } from "@aws-amplify/api";
 import { Config } from "./Config.con.js";
-import { writeBloodPressureText, getRecordsText } from "./GraphQl";
+import {
+  writeBloodPressureText,
+  getRecordsText,
+  writeBloodSugarLevelText
+} from "./GraphQl";
 import * as R from "ramda";
 //Configuration
 API.configure(Config.Api);
@@ -16,8 +20,8 @@ const fetchData = R.curry(function(queryText, data) {
 
 //Mutations
 const writeBloodPressure = saveData(writeBloodPressureText);
-
+const writeBloodSugarLevel = saveData(writeBloodSugarLevelText);
 //Queries
 const getRecords = fetchData(getRecordsText);
 
-export { writeBloodPressure, getRecords };
+export { writeBloodPressure, writeBloodSugarLevel, getRecords };
