@@ -2,7 +2,7 @@
     <div id="user-form-container">
         <form @submit.prevent = "save">
             <fieldset >
-                <legend>Blood Presure</legend>
+                <legend>Blood Pressure</legend>
                 <ul>
                     <li>
                         <label for="systolic">Systolic:</label>
