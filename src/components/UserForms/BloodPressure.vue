@@ -33,6 +33,7 @@
                 <th scope="column">Time</th>
                 <th scope="column" title="Systolic Blood Pressure"><abbr>SBP</abbr></th>
                 <th scope="column"> <abbr title="Diastolyc Blood Pressure">DBP</abbr> </th>
+                <th scope="column"> Delete </th>
               </tr>
             </thead>
             <tbody>
@@ -41,11 +42,12 @@
                   <td class="time-cell"> <p> {{ item.CreatedAt.toLocaleTimeString() }} </p> </td>
                   <td>{{ item.Data.systolic}}</td>
                   <td>{{ item.Data.diastolyc }}</td>
+                  <td> <button @click.prevent = "deleteRecord" :id="item.CreatedAt.toISOString()" class="delete-buttons" title="Delete">X</button></td>
               </tr>
             </tbody>
             <tfoot>
               <tr>
-                <td colspan="4">Units mmHg </td>
+                <td colspan="5">Units mmHg </td>
               </tr>
             </tfoot>
           </table>
@@ -57,7 +59,11 @@
     </div>
 </template>
 <script>
-import { writeBloodPressure, getRecords } from "../services/Amplify/Api";
+import {
+  writeBloodPressure,
+  getRecords,
+  deleteR
+} from "../services/Amplify/Api";
 import {
   catchP,
   then,
@@ -90,6 +96,35 @@ export default {
     getRecordsCom(type);
   },
   methods: {
+    deleteRecord(evt) {
+      const vm = this;
+      const data = vm.bloodPressureData;
+      const recordDate = evt.target.id;
+      const recordIndex = R.findIndex(
+        R.propEq("CreatedAt", new Date(recordDate))
+      )(data);
+      const obj = data[recordIndex];
+
+      const message = `You are about to delete this record ${obj.CreatedAt.toLocaleString()} Systolic: ${
+        obj.Data.systolic
+      }  Diastolyc: ${obj.Data.diastolyc}`;
+
+      const confirmation = window.confirm(message);
+      if (confirmation) {
+        const deleteRComp = R.compose(
+          catchP(error => {
+            console.log(error);
+            alert(error.errors[0].message);
+          }),
+          then(response => {
+            console.log(response);
+            vm.bloodPressureData.splice(recordIndex, 1);
+          }),
+          deleteR
+        );
+        deleteRComp({ date: recordDate });
+      }
+    },
     showChart() {
       const data = R.pluck("Data", this.bloodPressureData);
       const systolic = R.pluck("systolic", data);

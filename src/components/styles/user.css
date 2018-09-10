@@ -220,6 +220,7 @@ article.user-article {
   align-self: start;
   z-index: 2000;
   color: black;
+  border: none;
 }
 
 #exit:hover {

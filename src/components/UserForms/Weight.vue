@@ -28,6 +28,7 @@
                 <th scope="column">Date</th>
                 <th scope="column">Time</th>
                 <th scope="column"> Level </th>
+                <th scope="column"> Delete </th>
               </tr>
             </thead>
             <tbody>
@@ -35,11 +36,12 @@
                   <td class="time-cell"> <p> {{ item.CreatedAt.toLocaleDateString() }} </p> </td>
                   <td class="time-cell"> <p> {{ item.CreatedAt.toLocaleTimeString() }} </p> </td>
                   <td>{{ item.Data.weight}}</td>
+                  <td> <button @click.prevent = "deleteRecord" :id="item.CreatedAt.toISOString()" class="delete-buttons" title="Delete">X</button></td>
               </tr>
             </tbody>
             <tfoot>
               <tr>
-                <td colspan="3">Units Kg </td>
+                <td colspan="4">Units Kg </td>
               </tr>
             </tfoot>
           </table>
@@ -51,7 +53,7 @@
     </div>
 </template>
 <script>
-import { writeWeight, getRecords } from "../services/Amplify/Api";
+import { writeWeight, getRecords, deleteR } from "../services/Amplify/Api";
 import {
   catchP,
   then,
@@ -84,6 +86,35 @@ export default {
     getRecordsCom(type);
   },
   methods: {
+    deleteRecord(evt) {
+      const vm = this;
+      const data = vm.weightR;
+      const recordDate = evt.target.id;
+      const recordIndex = R.findIndex(
+        R.propEq("CreatedAt", new Date(recordDate))
+      )(data);
+      const obj = data[recordIndex];
+
+      const message = `You are about to delete this record ${obj.CreatedAt.toLocaleString()} Level: ${
+        obj.Data.weight
+      }`;
+
+      const confirmation = window.confirm(message);
+      if (confirmation) {
+        const deleteRComp = R.compose(
+          catchP(error => {
+            console.log(error);
+            alert(error.errors[0].message);
+          }),
+          then(response => {
+            console.log(response);
+            vm.weightR.splice(recordIndex, 1);
+          }),
+          deleteR
+        );
+        deleteRComp({ date: recordDate });
+      }
+    },
     showChart() {
       const data = R.pluck("Data", this.weightR);
       const weight = R.pluck("weight", data);

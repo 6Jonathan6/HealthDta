@@ -42,7 +42,12 @@ const writeWeightText = `mutation Write($weight:Float!){
         }
     }
 }`;
-
+const deleteRecordText = `mutation DeleteRecord($date:String!){
+    delete(createdAt:$date){
+        UserId
+        CreatedAt
+    }
+}`;
 const getRecordsText = `query getUserDataByType ($type: String!) {
     getUserDataByType(type: $type){
         items {
@@ -68,5 +73,6 @@ export {
   writeBloodPressureText,
   getRecordsText,
   writeBloodSugarLevelText,
-  writeWeightText
+  writeWeightText,
+  deleteRecordText
 };

@@ -4,14 +4,17 @@ import {
   writeBloodPressureText,
   getRecordsText,
   writeBloodSugarLevelText,
-  writeWeightText
+  writeWeightText,
+  deleteRecordText
 } from "./GraphQl";
+
 import * as R from "ramda";
 //Configuration
 API.configure(Config.Api);
 
-//Function Template to save data
-const saveData = R.curry(function(mutationText, data) {
+//Function Template to save  and delete data
+//date is an object with all the parameter required by a mutation
+const mutateData = R.curry(function(mutationText, data) {
   return API.graphql(graphqlOperation(mutationText, data));
 });
 
@@ -20,10 +23,18 @@ const fetchData = R.curry(function(queryText, data) {
 });
 
 //Mutations
-const writeBloodPressure = saveData(writeBloodPressureText);
-const writeBloodSugarLevel = saveData(writeBloodSugarLevelText);
-const writeWeight = saveData(writeWeightText);
+const writeBloodPressure = mutateData(writeBloodPressureText);
+const writeBloodSugarLevel = mutateData(writeBloodSugarLevelText);
+const writeWeight = mutateData(writeWeightText);
+const deleteR = mutateData(deleteRecordText);
+
 //Queries
 const getRecords = fetchData(getRecordsText);
 
-export { writeBloodPressure, writeBloodSugarLevel, getRecords, writeWeight };
+export {
+  writeBloodPressure,
+  writeBloodSugarLevel,
+  getRecords,
+  writeWeight,
+  deleteR
+};

@@ -13,7 +13,7 @@
 #user-form-container form {
   min-width: 250px;
   max-width: 270px;
-  height: 330px;
+  height: auto;
   border-radius: 5%;
   background-color: #e6e6e6;
   padding: 1rem;
@@ -30,14 +30,13 @@
   padding-left: 0.5rem;
 }
 #user-form-container form fieldset ul {
-  height: 100%;
-  display: flex;
-  flex-flow: column;
-  justify-items: center;
-  align-content: center;
+  height: auto;
 }
 #user-form-container form fieldset ul li {
   margin-top: 0;
+}
+#user-form-container form fieldset ul li:nth-last-child(2) {
+  margin-top: 10px;
 }
 #user-form-container form fieldset ul li:first-child {
   height: 4rem;
@@ -107,24 +106,31 @@ caption {
 }
 
 #data-table thead {
-  border-bottom: 3px solid#31465f;
+  border-bottom: 3px dashed#e08c05;
   color: #0f1e32;
 }
 
-tfoot {
-  border: 3px solid#31465f;
+thead tr th:last-child {
+  border-left: 5px solid transparent;
 }
 td {
   color: #152939;
-  background: #28c3f3;
   font-size: 1.1rem;
   font-family: monospace;
-  border-left: 2px dashed;
-  border-right: 2px dashed #55677d;
   text-align: center;
   font-weight: 400;
+  border-top: 0.5rem solid transparent;
 }
 
+tfoot td {
+  border: none;
+}
+tfoot {
+  border: 3px solid#31465f;
+}
+tr:hover {
+  background: #0362fc;
+}
 .time-cell {
   font-size: 0.9rem;
 }
@@ -134,6 +140,15 @@ td {
 
 .disabledButton {
   opacity: 0.3;
+}
+.delete-buttons {
+  border-radius: 25%;
+  height: 30px;
+  width: 30px;
+  background: #b71010;
+  font-size: 1.2rem;
+  font-family: sans;
+  font-weight: bolder;
 }
 
 /* Chart */
