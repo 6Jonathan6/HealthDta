@@ -2,15 +2,11 @@
     <div id="user-form-container">
         <form @submit.prevent = "save">
             <fieldset >
-                <legend>Blood Pressure</legend>
+                <legend>Weight Control</legend>
                 <ul>
                     <li>
-                        <label for="systolic">Systolic:</label>
-                        <input type="number" v-model="systolic" min="0" max="1000" id="systolic" required>
-                    </li>
-                    <li>
-                        <label for="systolic">Diastolyc</label>
-                        <input type="number" v-model="diastolyc" min="0" max="1000" id="systolic" required>
+                        <label for="weight">Weight:</label>
+                        <input type="number" v-model="weight" min="0" max="200" step="0.01" id="weight" required>
                     </li>
                     <li>
                         <input id="submit-button" :class="disabledButton" type="submit" value="Save"  :disabled="isDisabled">
@@ -26,13 +22,12 @@
         </form>
         <div id="data-table">
           <table>
-            <caption>Blood Pressure Table </caption>
+            <caption>Weight </caption>
             <thead>
               <tr>
                 <th scope="column">Date</th>
                 <th scope="column">Time</th>
-                <th scope="column" title="Systolic Blood Pressure"><abbr>SBP</abbr></th>
-                <th scope="column"> <abbr title="Diastolyc Blood Pressure">DBP</abbr> </th>
+                <th scope="column"> Level </th>
                 <th scope="column"> Delete </th>
               </tr>
             </thead>
@@ -40,14 +35,13 @@
               <tr v-for="(item, index ) in parsedDateTime" :key="index">
                   <td class="time-cell"> <p> {{ item.CreatedAt.toLocaleDateString() }} </p> </td>
                   <td class="time-cell"> <p> {{ item.CreatedAt.toLocaleTimeString() }} </p> </td>
-                  <td>{{ item.Data.systolic}}</td>
-                  <td>{{ item.Data.diastolyc }}</td>
+                  <td>{{ item.Data.weight}}</td>
                   <td> <button @click.prevent = "deleteRecord" :id="item.CreatedAt.toISOString()" class="delete-buttons" title="Delete">X</button></td>
               </tr>
             </tbody>
             <tfoot>
               <tr>
-                <td colspan="5">Units mmHg </td>
+                <td colspan="4">Units Kg </td>
               </tr>
             </tfoot>
           </table>
@@ -59,11 +53,7 @@
     </div>
 </template>
 <script>
-import {
-  writeBloodPressure,
-  getRecords,
-  deleteR
-} from "../services/Amplify/Api";
+import { writeWeight, getRecords, deleteR } from "../services/Amplify/Api";
 import {
   catchP,
   then,
@@ -78,11 +68,11 @@ import Chart from "chart.js";
 export default {
   created() {
     const vm = this;
-    const setData = setProperty(vm, "bloodPressureData");
+    const setData = setProperty(vm, "weightR");
     const pathToItems = ["data", "getUserDataByType", "items"];
     const getItems = getProperty(pathToItems);
     const successHandler = R.compose(setData, getItems);
-    const type = { type: "BloodPressure" };
+    const type = { type: "Weight" };
 
     const errorHandler = error => {
       alert(error);
@@ -98,16 +88,16 @@ export default {
   methods: {
     deleteRecord(evt) {
       const vm = this;
-      const data = vm.bloodPressureData;
+      const data = vm.weightR;
       const recordDate = evt.target.id;
       const recordIndex = R.findIndex(
         R.propEq("CreatedAt", new Date(recordDate))
       )(data);
       const obj = data[recordIndex];
 
-      const message = `You are about to delete this record ${obj.CreatedAt.toLocaleString()} Systolic: ${
-        obj.Data.systolic
-      }  Diastolyc: ${obj.Data.diastolyc}`;
+      const message = `You are about to delete this record ${obj.CreatedAt.toLocaleString()} Level: ${
+        obj.Data.weight
+      }`;
 
       const confirmation = window.confirm(message);
       if (confirmation) {
@@ -118,7 +108,7 @@ export default {
           }),
           then(response => {
             console.log(response);
-            vm.bloodPressureData.splice(recordIndex, 1);
+            vm.weightR.splice(recordIndex, 1);
           }),
           deleteR
         );
@@ -126,10 +116,9 @@ export default {
       }
     },
     showChart() {
-      const data = R.pluck("Data", this.bloodPressureData);
-      const systolic = R.pluck("systolic", data);
-      const diastolyc = R.pluck("diastolyc", data);
-      const dates = R.pluck("CreatedAt", this.bloodPressureData);
+      const data = R.pluck("Data", this.weightR);
+      const weight = R.pluck("weight", data);
+      const dates = R.pluck("CreatedAt", this.weightR);
       const ctx = this.$refs.canvas;
       const myChart = new Chart(ctx, {
         type: "line",
@@ -137,16 +126,9 @@ export default {
           labels: dates,
           datasets: [
             {
-              data: systolic,
-              label: "Sytolic",
+              data: weight,
+              label: "Weight",
               borderColor: "#d81a08",
-              borderWidth: 2,
-              fill: true
-            },
-            {
-              data: diastolyc,
-              label: "Diastolyc",
-              borderColor: "#0820d8",
               borderWidth: 2,
               fill: true
             }
@@ -156,7 +138,7 @@ export default {
           responsive: true,
           title: {
             display: true,
-            text: "Blood Pressure",
+            text: "Weight",
             fontSize: 25
           },
           scales: {
@@ -176,9 +158,9 @@ export default {
     save() {
       const vm = this;
       const isDisabled = "isDisabled";
-      const arrayProp = "bloodPressureData";
+      const arrayProp = "weightR";
       const propMessage = "message";
-      const type = "BloodPressure";
+      const type = "Weight";
 
       disabledButton(vm, isDisabled);
 
@@ -195,15 +177,14 @@ export default {
       const data = Object.assign(
         {},
         {
-          systolic: vm.systolic,
-          diastolyc: vm.diastolyc
+          weight: vm.weight
         }
       );
 
       const saveData = R.compose(
         catchP(errorHandler),
         then(successHandlerCurried),
-        writeBloodPressure
+        writeWeight
       );
       saveData(data);
     }
@@ -211,9 +192,8 @@ export default {
 
   data() {
     return {
-      bloodPressureData: [],
-      systolic: null,
-      diastolyc: null,
+      weightR: [],
+      weight: null,
       message: "",
       error: false,
       isDisabled: false
@@ -226,7 +206,7 @@ export default {
         : { disabledButton: false };
     },
     parsedDateTime() {
-      const array = this.bloodPressureData.map(parseDate);
+      const array = this.weightR.map(parseDate);
       return R.reverse(array);
     }
   }
@@ -236,4 +216,3 @@ export default {
 <style>
 @import url("../styles/userArticle.css");
 </style>
-

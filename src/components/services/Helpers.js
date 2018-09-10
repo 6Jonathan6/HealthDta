@@ -37,7 +37,8 @@ const enabledButton = R.curry(function(vm, prop) {
 
 //isDisabled prop of the vue compenents which handles wether the button is disabled or not
 const writeError = R.curry(function(vm, prop, initialMessage, isDisabled, obj) {
-  vm[prop] = obj.message;
+  console.log(obj);
+  vm[prop] = obj.message ? obj.message : "Error try again!";
   vm["error"] = true;
   const toInitial = function() {
     vm[prop] = initialMessage;
